@@ -1,0 +1,1 @@
+# mantha-webpack-config
