@@ -1,6 +1,8 @@
 import { join } from 'path';
+import { readdirSync } from 'fs';
 import { existsSync, mkdirSync } from 'fs';
 import { Configuration } from 'webpack';
+import merge from 'webpack-merge';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as cleanWebpackPlugin from 'clean-webpack-plugin';
 import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin/lib';
@@ -9,6 +11,15 @@ import * as CopyWebpackPlugin from 'copy-webpack-plugin';
 
 import * as webpack from 'webpack';
 
+let activePackagePreset: IPackagePreset | null = null;
+
+try {
+  let fileName = readdirSync(join(__dirname, '../../@mantha')).find(fn => /package-(vue|lit)/.test(fn));
+  activePackagePreset = require(`@mantha/${fileName}`);
+} catch (error) {
+  console.error(`No mantha preset package is installed.`);
+}
+
 export const webpackBaseConfigFactory = (
   baseConfig: IBaseConfig
 ): Configuration => {
@@ -16,7 +27,13 @@ export const webpackBaseConfigFactory = (
     return join(baseConfig.projectPath, dir, ...args);
   }
 
-  var paths = require(baseConfig.configJsonPath).compilerOptions.paths;
+  var paths: any;
+
+  try {
+    paths = require(baseConfig.configJsonPath).compilerOptions.paths
+  } catch (error) {
+    paths = {}
+  }
 
   paths = Object.keys(paths).reduce((obj, key) => {
     obj[key.replace('/*', '')] = resolve('src/' + paths[key][0].replace('/*', '').replace('./', ''));
@@ -41,7 +58,17 @@ export const webpackBaseConfigFactory = (
     mkdirSync(resolve(buildPath, 'favicons'));
   }
 
-  return ({
+  if (baseConfig.activePackage) {
+    try {
+      activePackagePreset = require(`@mantha/package-${baseConfig.activePackage}`);
+    } catch (error) {
+      console.error(`Package "@mantha/package-${baseConfig.activePackage}" not found.`, error);
+    }
+  }
+
+  const packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {}
+
+  return merge({
     mode: baseConfig.mode,
     output: {
       path: resolve(buildPath, baseConfig.mode),
@@ -69,7 +96,7 @@ export const webpackBaseConfigFactory = (
     },
 
     resolve: {
-      extensions: ['.ts', '.js', '.pug', '.css', '.styl', '.json'],
+      extensions: ['.ts', '.js', '.css', '.json'],
       alias: {
         ...paths
       }
@@ -78,52 +105,7 @@ export const webpackBaseConfigFactory = (
     module: {
       noParse: /.*[t|j]sconfig\.json$/,
       rules: [
-        {
-          test: /\.styl$/,
-          use: [
-            (baseConfig.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'),
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: baseConfig.mode === 'development',
-                minimize: baseConfig.mode === 'production'
-              } as any
-            }, {
-              loader: 'postcss-loader',
-              options: {
-                ident: 'postcss',
-                plugins: [
-                  require('autoprefixer')
-                ]
-              }
-            }, 'stylus-loader'
-          ],
-          exclude: [/.*src\/themes\/.*/]
-        },
-        {
-          test: /\.styl$/,
-          use: [
-            (baseConfig.mode === 'production' ? MiniCssExtractPlugin.loader : 'style-loader'),
-            {
-              loader: 'css-loader',
-              options: {
-                sourceMap: baseConfig.mode === 'development',
-                minimize: baseConfig.mode === 'production'
-              } as any
-            },
-            {
-              loader: 'postcss-loader',
-              options: {
-                ident: 'postcss',
-                plugins: [
-                  require('autoprefixer')
-                ]
-              }
-            }, 'stylus-loader'
-          ],
-          include: [/.*src\/themes\/.*/, /node_modules/],
-          exclude: [/.*src\/components.*/, /.*src\/pages.*/]
-        },
+
         {
           test: /\.css$/,
           use: [
@@ -166,20 +148,7 @@ export const webpackBaseConfigFactory = (
           exclude: [/node_modules/],
           loader: 'babel-loader'
         },
-        {
-          test: /\.pug$/,
-          loaders: [{
-            loader: 'vue-template-loader',
-            options: {
-              functional: false,
-              transformAssetUrls: {
-                img: 'src'
-              }
-            }
-          }, {
-            loader: 'pug-plain-loader'
-          }]
-        },
+
         {
           test: /\.(woff(2)?|eot|ttf|otf|)$/,
           loader: 'file-loader',
@@ -276,7 +245,10 @@ export const webpackBaseConfigFactory = (
     ],
 
     node: { __dirname: true }
-  });
+  },
+  packageConfiguration,
+  baseConfig.customConfiguration || {}
+  );
 };
 
 export interface IBaseConfig {
@@ -284,6 +256,12 @@ export interface IBaseConfig {
   htmlConfigFactory: (mode: IBaseConfig['mode']) => any;
   chunkSplitPatterns: RegExp[];
   projectPath: string;
-  buildPath: string;
   configJsonPath: string;
+  buildPath?: string;
+  activePackage?: 'vue' | 'lit';
+  customConfiguration?: webpack.Configuration;
+}
+
+interface IPackagePreset {
+  webpackConfigurationFactory?: (mode: IBaseConfig['mode']) => webpack.Configuration
 }
