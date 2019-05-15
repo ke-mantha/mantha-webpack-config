@@ -8,6 +8,7 @@
     "build": "tsc --module es6 --target es6 --outDir ./dist",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "types": "dist/types",
   "files": [
     "src",
     "dist"
