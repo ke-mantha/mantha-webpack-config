@@ -1,5 +1,5 @@
 {
-  "name": "mantha-webpack-config",
+  "name": "@mantha/webpack-config",
   "version": "1.0.0",
   "description": "",
   "main": "dist/es/index.js",
