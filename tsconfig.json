@@ -10,12 +10,10 @@
       "es2017",
       "dom"
     ],
-    "rootDir": "src",
+    "rootDir": "./src",
     "strict": true,
     "sourceMap": true,
     "declaration": true,
-    "declarationDir": "dist/types",
-    "downlevelIteration": true,
     "allowSyntheticDefaultImports": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
@@ -24,7 +22,8 @@
     "noImplicitAny": false,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "outDir": "dist/lib",
+    "declarationDir": "dist/types",
+    "outDir": "dist",
     "typeRoots": [
       "node_modules/@types"
     ]
