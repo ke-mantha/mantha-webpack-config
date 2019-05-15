@@ -2,7 +2,7 @@
   "name": "@mantha/webpack-config",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/es/index.js",
+  "main": "dist/index.js",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc --module es6 --target es6 --outDir ./dist",
