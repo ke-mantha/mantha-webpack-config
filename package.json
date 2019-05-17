@@ -24,6 +24,7 @@
   },
   "homepage": "https://github.com/ke-mantha/mantha-webpack-config#readme",
   "devDependencies": {
+    "@kazanexpress/frontend-commitlint": "^1.0.0",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
