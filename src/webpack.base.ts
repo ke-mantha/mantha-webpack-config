@@ -48,14 +48,25 @@ export const webpackBaseConfigFactory = (
 
   const buildExist = existsSync(resolve(buildPath));
 
+  const additionalPlugins: webpack.Plugin[] = [];
+
   if (!buildExist) {
     mkdirSync(resolve(buildPath));
   }
 
-  const faviconsExist = existsSync(resolve(buildPath, 'favicons'));
+  if (!baseConfig.ignoreFavicons) {
+    const faviconsExist = existsSync(resolve(buildPath, 'favicons'));
 
-  if (!faviconsExist) {
-    mkdirSync(resolve(buildPath, 'favicons'));
+    if (!faviconsExist) {
+      mkdirSync(resolve(buildPath, 'favicons'));
+    }
+
+    additionalPlugins.push(new CopyWebpackPlugin([
+      {
+        from: resolve(buildPath, 'favicons'),
+        to: resolve('favicons')
+      }
+    ]));
   }
 
   if (baseConfig.activePackage) {
@@ -236,12 +247,7 @@ export const webpackBaseConfigFactory = (
       }),
       new webpack.NamedModulesPlugin(),
 
-      new CopyWebpackPlugin([
-        {
-          from: resolve(buildPath, 'favicons'),
-          to: resolve('favicons')
-        }
-      ])
+      ...additionalPlugins
     ],
 
     node: { __dirname: true }
@@ -260,6 +266,7 @@ export interface IBaseConfig {
   buildPath?: string;
   activePackage?: 'vue' | 'lit';
   customConfiguration?: webpack.Configuration;
+  ignoreFavicons?: boolean;
 }
 
 interface IPackagePreset {
