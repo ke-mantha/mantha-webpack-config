@@ -6,7 +6,11 @@
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "tsc --module es6 --target es6 --outDir ./dist",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preversion": "npm run build",
+    "patch": "npm version patch",
+    "minor": "npm version minor",
+    "major": "npm version major"
   },
   "types": "dist/types",
   "files": [
@@ -24,7 +28,7 @@
   },
   "homepage": "https://github.com/ke-mantha/mantha-webpack-config#readme",
   "devDependencies": {
-    "@kazanexpress/frontend-commitlint": "^1.0.0",
+    "@kazanexpress/frontend-commitlint": "^1.0.1",
     "rimraf": "^2.6.3",
     "ts-node": "^8.1.0",
     "typescript": "^3.4.5"
