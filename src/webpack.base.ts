@@ -79,9 +79,11 @@ export const webpackBaseConfigFactory = (
     }
   }
 
-  const packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {}
+  const packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : null) : null
 
-  return merge({
+  const configurations: webpack.Configuration[] = [];
+
+  configurations.push({
     mode: baseConfig.mode,
     output: {
       path: resolve(buildPath, baseConfig.mode),
@@ -253,10 +255,12 @@ export const webpackBaseConfigFactory = (
     ],
 
     node: { __dirname: true }
-  },
-  packageConfiguration,
-  baseConfig.customConfiguration || {}
-  );
+  });
+
+  packageConfiguration && configurations.push(packageConfiguration);
+  baseConfig.customConfiguration && configurations.push(baseConfig.customConfiguration);
+
+  return merge(...configurations);
 };
 
 export interface IBaseConfig {
