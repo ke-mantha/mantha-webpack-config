@@ -78,8 +78,9 @@ exports.webpackBaseConfigFactory = function (baseConfig) {
             console.error("Package \"@mantha/package-" + baseConfig.activePackage + "\" not found.", error);
         }
     }
-    var packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {};
-    return merge({
+    var packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : null) : null;
+    var configurations = [];
+    configurations.push({
         mode: baseConfig.mode,
         output: {
             path: resolve(buildPath, baseConfig.mode),
@@ -227,6 +228,9 @@ exports.webpackBaseConfigFactory = function (baseConfig) {
             new webpack.NamedModulesPlugin()
         ].concat(additionalPlugins),
         node: { __dirname: true }
-    }, packageConfiguration, baseConfig.customConfiguration || {});
+    });
+    packageConfiguration && configurations.push(packageConfiguration);
+    baseConfig.customConfiguration && configurations.push(baseConfig.customConfiguration);
+    return merge.apply(void 0, configurations);
 };
 //# sourceMappingURL=webpack.base.js.map
