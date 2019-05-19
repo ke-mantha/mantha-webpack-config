@@ -52,7 +52,7 @@ exports.webpackBaseConfigFactory = function (baseConfig) {
     }, {});
     var htmlConfig = baseConfig.htmlConfigFactory(baseConfig.mode);
     htmlConfig.favicon && (htmlConfig.favicon = resolve('src/' + htmlConfig.favicon));
-    var buildPath = resolve(baseConfig.buildPath || 'build');
+    var buildPath = resolve(baseConfig.buildPath || './build');
     var buildExist = fs_2.existsSync(resolve(buildPath));
     var additionalPlugins = [];
     if (!buildExist) {
