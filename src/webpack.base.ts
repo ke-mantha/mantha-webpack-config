@@ -2,7 +2,7 @@ import { join } from 'path';
 import { readdirSync } from 'fs';
 import { existsSync, mkdirSync } from 'fs';
 import { Configuration } from 'webpack';
-import merge from 'webpack-merge';
+import * as merge from 'webpack-merge';
 import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
 import * as cleanWebpackPlugin from 'clean-webpack-plugin';
 import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin/lib';
