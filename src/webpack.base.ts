@@ -46,7 +46,7 @@ export const webpackBaseConfigFactory = (
   const htmlConfig = baseConfig.htmlConfigFactory(baseConfig.mode);
   htmlConfig.favicon && (htmlConfig.favicon = resolve('src/' + htmlConfig.favicon));
 
-  const buildPath = resolve(baseConfig.buildPath || 'build')
+  const buildPath = resolve(baseConfig.buildPath || './build')
 
   const buildExist = existsSync(resolve(buildPath));
 
