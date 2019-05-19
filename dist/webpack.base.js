@@ -20,12 +20,14 @@ export const webpackBaseConfigFactory = (baseConfig) => {
     function resolve(dir, ...args) {
         return join(baseConfig.projectPath, dir, ...args);
     }
-    var paths;
-    try {
-        paths = require(baseConfig.configJsonPath).compilerOptions.paths;
-    }
-    catch (error) {
-        paths = {};
+    var paths = {};
+    if (baseConfig.configJsonPath) {
+        try {
+            paths = require(baseConfig.configJsonPath).compilerOptions.paths;
+        }
+        catch (error) {
+            paths = {};
+        }
     }
     paths = Object.keys(paths).reduce((obj, key) => {
         obj[key.replace('/*', '')] = resolve('src/' + paths[key][0].replace('/*', '').replace('./', ''));

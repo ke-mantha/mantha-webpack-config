@@ -7,7 +7,7 @@ export interface IBaseConfig {
     htmlConfigFactory: (mode: IBaseConfig['mode']) => any;
     chunkSplitPatterns: RegExp[];
     projectPath: string;
-    configJsonPath: string;
+    configJsonPath?: string;
     buildPath?: string;
     activePackage?: 'vue' | 'lit';
     customConfiguration?: webpack.Configuration;
