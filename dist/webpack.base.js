@@ -1,24 +1,41 @@
-import { join } from 'path';
-import { readdirSync } from 'fs';
-import { existsSync, mkdirSync } from 'fs';
-import merge from 'webpack-merge';
-import * as MiniCssExtractPlugin from 'mini-css-extract-plugin';
-import * as cleanWebpackPlugin from 'clean-webpack-plugin';
-import * as ForkTsCheckerWebpackPlugin from 'fork-ts-checker-webpack-plugin/lib';
-import * as HtmlWebpackPlugin from 'html-webpack-plugin';
-import * as CopyWebpackPlugin from 'copy-webpack-plugin';
-import * as webpack from 'webpack';
-let activePackagePreset = null;
+"use strict";
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var path_1 = require("path");
+var fs_1 = require("fs");
+var fs_2 = require("fs");
+var webpack_merge_1 = require("webpack-merge");
+var MiniCssExtractPlugin = require("mini-css-extract-plugin");
+var cleanWebpackPlugin = require("clean-webpack-plugin");
+var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin/lib");
+var HtmlWebpackPlugin = require("html-webpack-plugin");
+var CopyWebpackPlugin = require("copy-webpack-plugin");
+var webpack = require("webpack");
+var activePackagePreset = null;
 try {
-    let fileName = readdirSync(join(__dirname, '../../@mantha')).find(fn => /package-(vue|lit)/.test(fn));
-    activePackagePreset = require(`@mantha/${fileName}`);
+    var fileName = fs_1.readdirSync(path_1.join(__dirname, '../../@mantha')).find(function (fn) { return /package-(vue|lit)/.test(fn); });
+    activePackagePreset = require("@mantha/" + fileName);
 }
 catch (error) {
-    console.error(`No mantha preset package is installed.`);
+    console.error("No mantha preset package is installed.");
 }
-export const webpackBaseConfigFactory = (baseConfig) => {
-    function resolve(dir, ...args) {
-        return join(baseConfig.projectPath, dir, ...args);
+exports.webpackBaseConfigFactory = function (baseConfig) {
+    function resolve(dir) {
+        var args = [];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
+        }
+        return path_1.join.apply(void 0, [baseConfig.projectPath, dir].concat(args));
     }
     var paths = {};
     if (baseConfig.configJsonPath) {
@@ -29,22 +46,22 @@ export const webpackBaseConfigFactory = (baseConfig) => {
             paths = {};
         }
     }
-    paths = Object.keys(paths).reduce((obj, key) => {
+    paths = Object.keys(paths).reduce(function (obj, key) {
         obj[key.replace('/*', '')] = resolve('src/' + paths[key][0].replace('/*', '').replace('./', ''));
         return obj;
     }, {});
-    const htmlConfig = baseConfig.htmlConfigFactory(baseConfig.mode);
+    var htmlConfig = baseConfig.htmlConfigFactory(baseConfig.mode);
     htmlConfig.favicon && (htmlConfig.favicon = resolve('src/' + htmlConfig.favicon));
-    const buildPath = resolve(baseConfig.buildPath || 'build');
-    const buildExist = existsSync(resolve(buildPath));
-    const additionalPlugins = [];
+    var buildPath = resolve(baseConfig.buildPath || 'build');
+    var buildExist = fs_2.existsSync(resolve(buildPath));
+    var additionalPlugins = [];
     if (!buildExist) {
-        mkdirSync(resolve(buildPath));
+        fs_2.mkdirSync(resolve(buildPath));
     }
     if (!baseConfig.ignoreFavicons) {
-        const faviconsExist = existsSync(resolve(buildPath, 'favicons'));
+        var faviconsExist = fs_2.existsSync(resolve(buildPath, 'favicons'));
         if (!faviconsExist) {
-            mkdirSync(resolve(buildPath, 'favicons'));
+            fs_2.mkdirSync(resolve(buildPath, 'favicons'));
         }
         additionalPlugins.push(new CopyWebpackPlugin([
             {
@@ -55,14 +72,14 @@ export const webpackBaseConfigFactory = (baseConfig) => {
     }
     if (baseConfig.activePackage) {
         try {
-            activePackagePreset = require(`@mantha/package-${baseConfig.activePackage}`);
+            activePackagePreset = require("@mantha/package-" + baseConfig.activePackage);
         }
         catch (error) {
-            console.error(`Package "@mantha/package-${baseConfig.activePackage}" not found.`, error);
+            console.error("Package \"@mantha/package-" + baseConfig.activePackage + "\" not found.", error);
         }
     }
-    const packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {};
-    return merge({
+    var packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {};
+    return webpack_merge_1.default({
         mode: baseConfig.mode,
         output: {
             path: resolve(buildPath, baseConfig.mode),
@@ -80,14 +97,14 @@ export const webpackBaseConfigFactory = (baseConfig) => {
             chunksSort: 'size',
             assetsSort: 'size',
             modulesSort: 'size',
-            excludeAssets(name) {
-                const excludeFromLogs = [/assets/, /static/, /favicon/, /webpack-silent/];
-                return excludeFromLogs.some(r => r.test(name));
+            excludeAssets: function (name) {
+                var excludeFromLogs = [/assets/, /static/, /favicon/, /webpack-silent/];
+                return excludeFromLogs.some(function (r) { return r.test(name); });
             }
         },
         resolve: {
             extensions: ['.ts', '.js', '.css', '.json'],
-            alias: Object.assign({}, paths)
+            alias: __assign({}, paths)
         },
         module: {
             noParse: /.*[t|j]sconfig\.json$/,
@@ -176,7 +193,7 @@ export const webpackBaseConfigFactory = (baseConfig) => {
                         name: true
                     },
                     main: {
-                        test: chunk => (baseConfig.chunkSplitPatterns.every(p => !p.test(chunk.userRequest) && !p.test(chunk._chunks.values().next().value.name))),
+                        test: function (chunk) { return (baseConfig.chunkSplitPatterns.every(function (p) { return !p.test(chunk.userRequest) && !p.test(chunk._chunks.values().next().value.name); })); },
                         chunks: 'all',
                         enforce: true,
                         reuseExistingChunk: true,
@@ -191,7 +208,7 @@ export const webpackBaseConfigFactory = (baseConfig) => {
                 filename: baseConfig.mode === 'development' ? '[name].css' : '[name].[contenthash].css',
                 chunkFilename: baseConfig.mode === 'development' ? '[name].css' : '[name].[contenthash].css',
             }),
-            new HtmlWebpackPlugin(Object.assign({}, htmlConfig, { template: require('html-webpack-template'), inject: false, favicon: htmlConfig.favicon, title: htmlConfig.title, meta: htmlConfig.meta, env: { NODE_ENV: baseConfig.mode, ENV: baseConfig.mode }, minify: baseConfig.mode === 'production' ? {
+            new HtmlWebpackPlugin(__assign({}, htmlConfig, { template: require('html-webpack-template'), inject: false, favicon: htmlConfig.favicon, title: htmlConfig.title, meta: htmlConfig.meta, env: { NODE_ENV: baseConfig.mode, ENV: baseConfig.mode }, minify: baseConfig.mode === 'production' ? {
                     removeComments: true,
                     collapseWhitespace: true,
                     removeAttributeQuotes: true,
@@ -207,9 +224,8 @@ export const webpackBaseConfigFactory = (baseConfig) => {
                 'process.env.NODE_ENV': JSON.stringify(baseConfig.mode),
                 'process.env.ENV': JSON.stringify(baseConfig.mode),
             }),
-            new webpack.NamedModulesPlugin(),
-            ...additionalPlugins
-        ],
+            new webpack.NamedModulesPlugin()
+        ].concat(additionalPlugins),
         node: { __dirname: true }
     }, packageConfiguration, baseConfig.customConfiguration || {});
 };
