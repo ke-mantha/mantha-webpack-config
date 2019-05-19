@@ -27,12 +27,14 @@ export const webpackBaseConfigFactory = (
     return join(baseConfig.projectPath, dir, ...args);
   }
 
-  var paths: any;
+  var paths: any = {};
 
-  try {
-    paths = require(baseConfig.configJsonPath).compilerOptions.paths
-  } catch (error) {
-    paths = {}
+  if (baseConfig.configJsonPath) {
+    try {
+      paths = require(baseConfig.configJsonPath).compilerOptions.paths
+    } catch (error) {
+      paths = {}
+    }
   }
 
   paths = Object.keys(paths).reduce((obj, key) => {
@@ -262,7 +264,7 @@ export interface IBaseConfig {
   htmlConfigFactory: (mode: IBaseConfig['mode']) => any;
   chunkSplitPatterns: RegExp[];
   projectPath: string;
-  configJsonPath: string;
+  configJsonPath?: string;
   buildPath?: string;
   activePackage?: 'vue' | 'lit';
   customConfiguration?: webpack.Configuration;
