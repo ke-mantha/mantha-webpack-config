@@ -14,7 +14,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 var path_1 = require("path");
 var fs_1 = require("fs");
 var fs_2 = require("fs");
-var webpack_merge_1 = require("webpack-merge");
+var merge = require("webpack-merge");
 var MiniCssExtractPlugin = require("mini-css-extract-plugin");
 var cleanWebpackPlugin = require("clean-webpack-plugin");
 var ForkTsCheckerWebpackPlugin = require("fork-ts-checker-webpack-plugin/lib");
@@ -79,7 +79,7 @@ exports.webpackBaseConfigFactory = function (baseConfig) {
         }
     }
     var packageConfiguration = activePackagePreset ? (activePackagePreset.webpackConfigurationFactory ? activePackagePreset.webpackConfigurationFactory(baseConfig.mode) : {}) : {};
-    return webpack_merge_1.default({
+    return merge({
         mode: baseConfig.mode,
         output: {
             path: resolve(buildPath, baseConfig.mode),
