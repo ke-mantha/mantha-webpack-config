@@ -10,7 +10,6 @@
       "es2017",
       "dom"
     ],
-    "rootDir": "./src",
     "strict": true,
     "sourceMap": true,
     "declaration": true,
@@ -23,10 +22,7 @@
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
     "declarationDir": "dist/types",
-    "outDir": "dist",
-    "typeRoots": [
-      "@types"
-    ]
+    "outDir": "dist"
   },
   "include": [
     "src"
