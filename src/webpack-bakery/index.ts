@@ -4,7 +4,7 @@ import * as merge from 'webpack-merge';
 
 import * as webpack from 'webpack';
 import { IBaseConfig, IDoughConfig } from '../types';
-import { createResolver, generatePaths, getPackageConfig, safePush as safePushTo } from '../util';
+import { createResolver, generatePaths, getPackageConfig, safePush } from '../util';
 import { formWebpackBase } from './bakery';
 
 import {
@@ -83,7 +83,7 @@ export const bakeBaseConfig = (
     formWebpackBase(doughConfig)
   ];
 
-  safePushTo(configurations,
+  safePush(configurations,
     doughConfig.activePackageConfiguration,
     doughConfig.customConfiguration
   );
