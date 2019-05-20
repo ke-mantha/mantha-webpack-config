@@ -9,13 +9,15 @@ export const defaultPublicPath = './';
 export const defaultEnableStats = true;
 
 export const packageNameRegExp = /package-(\w+)/;
-export const defaultPackageName = readdirSync(join(__dirname, '../../@mantha')).find(fn => packageNameRegExp.test(fn));
+export const defaultPackageName = () => readdirSync(join(__dirname, '../../@mantha')).find(fn => packageNameRegExp.test(fn));
 
 export function defaultPackage(): IPackagePreset | undefined {
-  console.info(`Searching for "@mantha/${defaultPackageName}..."`);
+  const name = defaultPackageName();
+
+  console.info(`Searching for "@mantha/${name}..."`);
 
   try {
-    return require(`@mantha/${defaultPackageName}`);
+    return require(`@mantha/${name}`);
   } catch (error) {
     console.error(`No mantha preset package is installed.`);
   }
