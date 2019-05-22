@@ -1,4 +1,4 @@
-import { Configuration, Output, Plugin } from 'webpack';
+import { Configuration, Plugin } from 'webpack';
 import { Options as HTMLOptions } from 'html-webpack-plugin';
 
 export type ManthaMode = 'development' | 'production';
