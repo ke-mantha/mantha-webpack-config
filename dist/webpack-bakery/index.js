@@ -56,6 +56,9 @@ exports.bakeBaseConfig = function (doughConfig) {
         bakery_1.formWebpackBase(doughConfig)
     ];
     util_1.safePush(configurations, doughConfig.activePackageConfiguration, doughConfig.customConfiguration);
-    return merge.apply(void 0, configurations);
+    return merge.strategy({
+        entry: 'append',
+        'module.rules': 'prepend'
+    }).apply(void 0, configurations);
 };
 //# sourceMappingURL=index.js.map
