@@ -69,7 +69,7 @@
         "statements": 95
       }
     },
-    "collectCoverage": true
+    "collectCoverage": false
   },
   "dependencies": {
     "autoprefixer": "^9.5.1",
