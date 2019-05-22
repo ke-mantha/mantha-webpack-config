@@ -88,5 +88,10 @@ export const bakeBaseConfig = (
     doughConfig.customConfiguration
   );
 
-  return merge(...configurations);
+  return merge.strategy(
+    {
+      entry: 'append', // 'prepend' | 'replace' | 'append', defaults to 'append'
+      'module.rules': 'prepend'
+    }
+  )(...configurations);
 };
