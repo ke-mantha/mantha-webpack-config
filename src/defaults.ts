@@ -9,7 +9,13 @@ export const defaultPublicPath = './';
 export const defaultEnableStats = true;
 
 export const packageNameRegExp = /package-(\w+)/;
-export const defaultPackageName = () => readdirSync(join(__dirname, '../../@mantha')).find(fn => packageNameRegExp.test(fn));
+export const defaultPackageName = () => {
+  try {
+    return readdirSync(join(__dirname, '../../@mantha')).find(fn => packageNameRegExp.test(fn))
+  } catch (error) {
+    return;
+  }
+};
 
 export function defaultPackage(): IPackagePreset | undefined {
   const name = defaultPackageName();
