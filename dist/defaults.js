@@ -8,7 +8,14 @@ exports.defaultFaviconsFolder = './favicons';
 exports.defaultPublicPath = './';
 exports.defaultEnableStats = true;
 exports.packageNameRegExp = /package-(\w+)/;
-exports.defaultPackageName = function () { return fs_1.readdirSync(path_1.join(__dirname, '../../@mantha')).find(function (fn) { return exports.packageNameRegExp.test(fn); }); };
+exports.defaultPackageName = function () {
+    try {
+        return fs_1.readdirSync(path_1.join(__dirname, '../../@mantha')).find(function (fn) { return exports.packageNameRegExp.test(fn); });
+    }
+    catch (error) {
+        return;
+    }
+};
 function defaultPackage() {
     var name = exports.defaultPackageName();
     console.info("Searching for \"@mantha/" + name + "...\"");
