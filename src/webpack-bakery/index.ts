@@ -1,4 +1,5 @@
 import { existsSync, mkdirSync } from 'fs';
+import { join } from 'path';
 import { Configuration } from 'webpack';
 import * as merge from 'webpack-merge';
 
@@ -62,20 +63,19 @@ export const cookDough =(
 export const bakeBaseConfig = (
   doughConfig: IDoughConfig
 ): Configuration => {
-  const resolve = doughConfig.resolve;
   const buildPath = doughConfig.buildPath;
 
-  const buildExist = existsSync(resolve(buildPath));
+  const buildExist = existsSync(buildPath);
 
   if (!buildExist) {
-    mkdirSync(resolve(buildPath));
+    mkdirSync(buildPath);
   }
 
   if (doughConfig.generateFavicons) {
-    const faviconsExist = existsSync(resolve(buildPath, defaultFaviconsFolder));
+    const faviconsExist = existsSync(join(buildPath, defaultFaviconsFolder));
 
     if (!faviconsExist) {
-      mkdirSync(resolve(buildPath, defaultFaviconsFolder));
+      mkdirSync(join(buildPath, defaultFaviconsFolder));
     }
   }
 
