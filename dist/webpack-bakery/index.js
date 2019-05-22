@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 var fs_1 = require("fs");
+var path_1 = require("path");
 var merge = require("webpack-merge");
 var util_1 = require("../util");
 var bakery_1 = require("./bakery");
@@ -40,16 +41,15 @@ exports.cookDough = function (baseConfig) {
     };
 };
 exports.bakeBaseConfig = function (doughConfig) {
-    var resolve = doughConfig.resolve;
     var buildPath = doughConfig.buildPath;
-    var buildExist = fs_1.existsSync(resolve(buildPath));
+    var buildExist = fs_1.existsSync(buildPath);
     if (!buildExist) {
-        fs_1.mkdirSync(resolve(buildPath));
+        fs_1.mkdirSync(buildPath);
     }
     if (doughConfig.generateFavicons) {
-        var faviconsExist = fs_1.existsSync(resolve(buildPath, defaults_1.defaultFaviconsFolder));
+        var faviconsExist = fs_1.existsSync(path_1.join(buildPath, defaults_1.defaultFaviconsFolder));
         if (!faviconsExist) {
-            fs_1.mkdirSync(resolve(buildPath, defaults_1.defaultFaviconsFolder));
+            fs_1.mkdirSync(path_1.join(buildPath, defaults_1.defaultFaviconsFolder));
         }
     }
     var configurations = [
