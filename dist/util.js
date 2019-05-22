@@ -24,6 +24,13 @@ exports.createResolver = function (projectPath) { return function (dir) {
 }; };
 function generatePaths(_a, resolve) {
     var configJsonPath = _a.configJsonPath;
+    if (resolve === void 0) { resolve = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        return path_1.join.apply(void 0, args);
+    }; }
     var tspaths = {};
     if (configJsonPath) {
         try {
@@ -34,7 +41,7 @@ function generatePaths(_a, resolve) {
         }
     }
     return Object.keys(tspaths).reduce(function (obj, key) {
-        obj[key.replace('/*', '')] = resolve('src/' + tspaths[key][0].replace('/*', '').replace('./', ''));
+        obj[key.replace('/*', '')] = resolve('src', tspaths[key][0].replace('/*', ''));
         return obj;
     }, {});
 }
