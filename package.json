@@ -7,7 +7,7 @@
     "prebuild": "rimraf dist",
     "build": "tsc --outDir ./dist",
     "test": "jest",
-    "preversion": "npm run build",
+    "preversion": "npm run test && npm run build",
     "patch": "npm version patch",
     "minor": "npm version minor",
     "major": "npm version major"
