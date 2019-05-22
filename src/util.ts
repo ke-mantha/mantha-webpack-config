@@ -16,7 +16,7 @@ export const createResolver = (
 
 export function generatePaths(
   { configJsonPath }: IBaseConfig,
-  resolve: ReturnType<typeof createResolver>
+  resolve: ReturnType<typeof createResolver> = (...args) => join(...args)
 ): Aliases {
   let tspaths: Aliases = {};
 
@@ -29,7 +29,7 @@ export function generatePaths(
   }
 
   return Object.keys(tspaths).reduce((obj, key) => {
-    obj[key.replace('/*', '')] = resolve('src/' + tspaths[key][0].replace('/*', '').replace('./', ''));
+    obj[key.replace('/*', '')] = resolve('src', tspaths[key][0].replace('/*', ''));
 
     return obj;
   }, {});
