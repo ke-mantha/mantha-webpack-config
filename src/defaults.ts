@@ -1,12 +1,18 @@
 import { join } from 'path';
 import { readdirSync } from 'fs';
 import { IPackagePreset } from './types';
+import { MergeStrategy } from 'webpack-merge';
 
 export const defaultSourcePath = './src';
 export const defaultBuildPath = './build';
 export const defaultFaviconsFolder = './favicons';
 export const defaultPublicPath = './';
 export const defaultEnableStats = true;
+
+export const defaultMergeStrategy: { [field: string]: MergeStrategy } = {
+  entry: 'append',
+  'module.rules': 'append'
+};
 
 export const packageNameRegExp = /package-(\w+)/;
 export const defaultPackageName = () => {
