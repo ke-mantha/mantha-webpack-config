@@ -14,7 +14,8 @@ import {
   defaultFaviconsFolder,
   defaultPublicPath,
   defaultChunkSplitPatterns,
-  defaultEnableStats
+  defaultEnableStats,
+  defaultMergeStrategy
 } from '../defaults';
 import { copyFavicons } from './plugins';
 
@@ -57,6 +58,7 @@ export const cookDough =(
     customConfiguration: baseConfig.customConfiguration,
     activePackageConfiguration: getPackageConfig(mode, baseConfig.activePackage),
     enableStats: typeof baseConfig.enableStats === 'undefined' ? defaultEnableStats : baseConfig.enableStats,
+    mergeStrategy: typeof baseConfig.mergeStrategy === 'undefined' ? defaultMergeStrategy : baseConfig.mergeStrategy
   };
 }
 
@@ -88,10 +90,5 @@ export const bakeBaseConfig = (
     doughConfig.customConfiguration
   );
 
-  return merge.strategy(
-    {
-      entry: 'append', // 'prepend' | 'replace' | 'append', defaults to 'append'
-      'module.rules': 'prepend'
-    }
-  )(...configurations);
+  return merge.strategy(doughConfig.mergeStrategy)(...configurations);
 };
