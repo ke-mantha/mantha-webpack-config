@@ -1,4 +1,5 @@
 import { Configuration, Plugin } from 'webpack';
+import { MergeStrategy } from 'webpack-merge';
 import { Options as HTMLOptions } from 'html-webpack-plugin';
 
 export type ManthaMode = 'development' | 'production';
@@ -40,6 +41,10 @@ export interface IBaseConfig {
 
   // Whether to enable output statistics
   enableStats?: boolean;
+
+  mergeStrategy?: {
+    [field: string]: MergeStrategy
+  }
 }
 
 export interface IDoughConfig {
@@ -82,6 +87,10 @@ export interface IDoughConfig {
   htmlConfig: HTMLOptions;
 
   resolve: Resolver;
+
+  mergeStrategy: {
+    [field: string]: MergeStrategy
+  }
 }
 
 export interface IPackagePreset {
