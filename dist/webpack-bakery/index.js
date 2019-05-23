@@ -38,6 +38,7 @@ exports.cookDough = function (baseConfig) {
         customConfiguration: baseConfig.customConfiguration,
         activePackageConfiguration: util_1.getPackageConfig(mode, baseConfig.activePackage),
         enableStats: typeof baseConfig.enableStats === 'undefined' ? defaults_1.defaultEnableStats : baseConfig.enableStats,
+        mergeStrategy: typeof baseConfig.mergeStrategy === 'undefined' ? defaults_1.defaultMergeStrategy : baseConfig.mergeStrategy
     };
 };
 exports.bakeBaseConfig = function (doughConfig) {
@@ -56,9 +57,6 @@ exports.bakeBaseConfig = function (doughConfig) {
         bakery_1.formWebpackBase(doughConfig)
     ];
     util_1.safePush(configurations, doughConfig.activePackageConfiguration, doughConfig.customConfiguration);
-    return merge.strategy({
-        entry: 'append',
-        'module.rules': 'prepend'
-    }).apply(void 0, configurations);
+    return merge.strategy(doughConfig.mergeStrategy).apply(void 0, configurations);
 };
 //# sourceMappingURL=index.js.map

@@ -7,6 +7,10 @@ exports.defaultBuildPath = './build';
 exports.defaultFaviconsFolder = './favicons';
 exports.defaultPublicPath = './';
 exports.defaultEnableStats = true;
+exports.defaultMergeStrategy = {
+    entry: 'append',
+    'module.rules': 'append'
+};
 exports.packageNameRegExp = /package-(\w+)/;
 exports.defaultPackageName = function () {
     try {
