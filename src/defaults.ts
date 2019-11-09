@@ -17,7 +17,7 @@ export const defaultMergeStrategy: { [field: string]: MergeStrategy } = {
 export const packageNameRegExp = /package-(\w+)/;
 export const defaultPackageName = () => {
   try {
-    return readdirSync(join(__dirname, '../../@mantha')).find(fn => packageNameRegExp.test(fn))
+    return readdirSync(join(__dirname, '../../../@mantha')).find(fn => packageNameRegExp.test(fn))
   } catch (error) {
     return;
   }
